@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <script type="text/javascript" src="http://code.createjs.com/easeljs-0.6.0.min.js"></script>
+    <title>Faucet 73159T-B7-BRT</title>
+    <script type="text/javascript">
+        var stage;
+        function init() {
+            var canvas = document.getElementById("canvas");
+            if (!canvas || !canvas.getContext) return;
+            stage = new createjs.Stage(canvas);
+            stage.enableMouseOver(true);
+            stage.mouseMoveOutside = true;
+            createjs.Touch.enable(stage);
+            var imgList = [   //need to add new images here
+                // "C:/Work/Kohler/demo/image/1.png",
+                "image/01.png",
+                "image/02.png",
+                "image/03.png",
+                "image/04.png",
+                "image/05.png",
+                "image/06.png",
+                "image/07.png",
+                "image/08.png",
+                "image/09.png",
+                "image/10.png",
+                "image/11.png",
+                "image/12.png",
+                "image/13.png",
+                "image/14.png",
+                "image/15.png",
+                "image/16.png",
+                "image/17.png",
+                "image/18.png",
+                "image/19.png",
+                "image/20.png",
+                "image/21.png",
+                "image/22.png",
+                "image/23.png",
+                "image/24.png",
+                "image/25.png",
+                "image/26.png",
+                "image/27.png",
+                "image/28.png",
+                "image/29.png",
+                "image/30.png",
+                "image/31.png",
+		"image/32.png",
+                "image/33.png",
+                "image/34.png",
+                "image/35.png",
+                "image/36.png",
+                "image/37.png",
+                "image/38.png",
+                "image/39.png",
+                "image/40.png",
+                "image/41.png",
+                "image/42.png",
+                "image/43.png",
+                "image/44.png",
+                "image/45.png",
+                "image/46.png",
+                "image/47.png",
+                "image/48.png",
+                "image/49.png",
+                "image/50.png",
+                "image/51.png",
+		"image/52.png",
+                "image/53.png",
+                "image/54.png",
+                "image/55.png",
+                "image/56.png",
+                "image/57.png",
+                "image/58.png",
+                "image/59.png",
+                "image/60.png",
+                "image/61.png",
+                "image/62.png",
+                "image/63.png",
+                "image/64.png",
+                "image/65.png",
+                "image/66.png",
+                "image/67.png",
+                "image/68.png",
+                "image/69.png",
+                "image/70.png",
+                "image/71.png",
+		"image/72.png"
+            ]
+            var images = [], loaded = 0, currentFrame = 0, totalFrames = imgList.length;
+            var rotate360Interval, start_x;
+            var bg = new createjs.Shape();
+            stage.addChild(bg);
+            var bmp = new createjs.Bitmap();
+            stage.addChild(bmp);
+            var myTxt = new createjs.Text("Faucet 73159T-B7-BRT", '20px Ubuntu', "#ccc");
+            myTxt.x = myTxt.y = 20;
+            myTxt.alpha = 1;
+            stage.addChild(myTxt);
+            function load360Image() {
+                var img = new Image();
+                img.src = imgList[loaded];
+                img.onload = img360Loaded;
+                images[loaded] = img;
+            }
+            function img360Loaded(event) {
+                loaded++;
+                bg.graphics.clear()
+                bg.graphics.beginFill("#fff").drawRect(0, 0, stage.canvas.width * loaded / totalFrames, stage.canvas.height);
+                bg.graphics.endFill();
+
+                if (loaded == totalFrames) start360();
+                else load360Image();
+            }
+            function start360() {
+                document.body.style.cursor = 'resize';
+
+                // 360 icon
+                var iconImage = new Image();
+                iconImage.src = "";
+                iconImage.onload = iconLoaded;
+
+                // update-draw
+                update360(0);
+
+                // first rotation
+                rotate360Interval = setInterval(function () { if (currentFrame === totalFrames - 1) { clearInterval(rotate360Interval); addNavigation(); } update360(1); }, 25);
+            }
+            function iconLoaded(event) {
+                var iconBmp = new createjs.Bitmap();
+                iconBmp.image = event.target;
+                iconBmp.x = 20;
+                iconBmp.y = canvas.height - iconBmp.image.height - 20;
+                stage.addChild(iconBmp);
+            }
+            function update360(dir) {
+                currentFrame += dir;
+                if (currentFrame < 0) currentFrame = totalFrames - 1;
+                else if (currentFrame > totalFrames - 1) currentFrame = 0;
+                bmp.image = images[currentFrame];
+            }
+            //------------------------------- 
+            function addNavigation() {
+                stage.onMouseOver = mouseOver;
+                stage.onMouseDown = mousePressed;
+                document.body.style.cursor = 'auto';
+            }
+            function mouseOver(event) {
+                document.body.style.cursor = 'pointer';
+            }
+            function mousePressed(event) {
+                start_x = event.rawX;
+                stage.onMouseMove = mouseMoved;
+                stage.onMouseUp = mouseUp;
+
+                document.body.style.cursor = 'w-resize';
+            }
+            function mouseMoved(event) {
+                var dx = event.rawX - start_x;
+                var abs_dx = Math.abs(dx);
+
+                if (abs_dx > 5) {
+                    update360(dx / abs_dx);
+                    start_x = event.rawX;
+                }
+            }
+            function mouseUp(event) {
+                stage.onMouseMove = null;
+                stage.onMouseUp = null;
+                document.body.style.cursor = 'pointer';
+            }
+            function handleTick() {
+                stage.update();
+            }
+            document.body.style.cursor = 'progress';
+            load360Image();
+            // TICKER
+            createjs.Ticker.addEventListener("tick", handleTick);
+            createjs.Ticker.setFPS(60);
+            createjs.Ticker.useRAF = true;
+        }
+        // Init
+        window.addEventListener('load', init, false);
+    </script>
+    <style>
+        .kohler-360-degre-images{width: 70%;}
+        .kohler-360-degre{
+             width: 100%;
+            height: 100%;margin: 0 auto;
+        }
+        canvas#canvas
+         {
+            width: 100%;
+            height: 100%;margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="kohler-360-degre-images">
+        <div class="kohler-360-degre"><canvas id='canvas' width="1024" height="768"></canvas></div>
+        
+    </div>
+</body>
+
+</html>
